@@ -1,6 +1,7 @@
 import numpy as np
 import random
 from plot_data import plot_data 
+import matplotlib.pyplot as plt
 
 def generate_data(n, gen_type="random"):
     if gen_type == "best":
@@ -48,13 +49,41 @@ def bubble_impr_sort(seq):
 
 		return op_count
 
+tokuda_gaps = [
+    525,
+    233,
+    103,
+    46,
+    20,
+    9,
+    4,
+    1,
+]
+
+def shellsort(seq, tokuda_gaps):
+	n = len(seq)
+	op_count = 0
+	for gap in tokuda_gaps:
+		for i in range(gap, n):
+			j = i
+			temp = seq[j]
+			while j >= gap:
+				op_count += 1
+				if seq[j - gap] > temp:
+					seq[j] = seq[j - gap]
+					j -= gap
+				else:
+					break
+			seq[j] = temp
+	return op_count
+
 sizes = [10, 100, 1000]
 types = ["random", "best", "worst"]
 
 data_plot = {
-    'random': {'bubble':{}, 'insertion':{}, 'bubble_impr':{}},
-    'best':   {'bubble':{}, 'insertion':{}, 'bubble_impr':{}},
-    'worst':  {'bubble':{}, 'insertion':{}, 'bubble_impr':{}}
+    'random': {'bubble':{}, 'shellsort':{}, 'bubble_impr':{}},
+    'best':   {'bubble':{}, 'shellsort':{}, 'bubble_impr':{}},
+    'worst':  {'bubble':{}, 'shellsort':{}, 'bubble_impr':{}}
 }
 
 for n in sizes:
@@ -74,5 +103,14 @@ for n in sizes:
         bubble_impr_op_count = bubble_impr_sort(data_bubble_impr)
         print("\tImproved bubble sort operation count:", int(bubble_impr_op_count))
         data_plot[gen_type]['bubble_impr'][n] = bubble_impr_op_count
+		
+        data_shellsort = np.copy(data)
+        shellsort_op_count = shellsort(data_shellsort, tokuda_gaps)
+        print("\tShellsort sort operation count:", int(shellsort_op_count))
+        data_plot[gen_type]['shellsort'][n] = shellsort_op_count
         
-plot_data(data_plot["best"], logarithmic=True, oneplot=True)
+plot_data(data_plot['random'], logarithmic=True, oneplot=True, data_label="Random Data")
+plot_data(data_plot['best'], logarithmic=True, oneplot=True, data_label="Best Case")
+plot_data(data_plot['worst'], logarithmic=True, oneplot=True, data_label="Worst Case")
+
+plt.show()
