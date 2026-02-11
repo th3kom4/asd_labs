@@ -11,7 +11,7 @@ def plot_data(data, logarithmic=False, oneplot=False, data_2={},
               legend_pos=0, legend2_pos=0, 
               show_markers=True,
               x_axis_label='Input size (log10)',
-              y_axis_label='Op count (log10)'):
+              y_axis_label='Comparisons (log10)'):
     
     fig = plt.figure() 
     

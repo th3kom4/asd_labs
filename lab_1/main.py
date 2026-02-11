@@ -48,20 +48,8 @@ def bubble_impr_sort(seq):
 	return (op_count, swap_count)
 
 tokuda_gaps = [
-    68178,
-    30301,
-    13467,
-    5985,
-    2660,
-    1182,
-    525,
-    233,
-    103,
-    46,
-    20,
-    9,
-    4,
-    1,
+    68178, 30301, 13467, 5985, 2660, 1182, 525,
+    233, 103, 46, 20, 9, 4, 1
 ]
 
 def shellsort(seq, tokuda_gaps):
@@ -83,6 +71,7 @@ def shellsort(seq, tokuda_gaps):
 			seq[j] = temp
 	return (op_count, swap_count)
 
+#sizes = [10, 100, 1000, 5000, 10000, 20000, 50000]
 sizes = [10, 100, 1000]
 types = ["random", "best", "worst"]
 
@@ -99,7 +88,8 @@ for n in sizes:
         print("\n\tDATA TYPE:", gen_type)
         
         data = generate_data(n, gen_type)
-        
+        print("Initial array: ")
+        print(np.array(data))
         data_bubble = np.copy(data)
         (bubble_op_count, bubble_swap_count) = bubble_sort(data_bubble)
         print("\tBubble sort operation count:", int(bubble_op_count))
@@ -117,7 +107,9 @@ for n in sizes:
         print("\tShellsort sort operation count:", int(shellsort_op_count))
         print("\tShellsort sort swap count:", int(shellsort_swap_count))
         data_plot[gen_type]['shellsort'][n] = shellsort_op_count
-        
+        print("Sorted array:")
+        print(data_shellsort)
+
 plot_data(data_plot['random'], logarithmic=True, oneplot=True, data_label="Random Data")
 plot_data(data_plot['best'], logarithmic=True, oneplot=True, data_label="Best Case")
 plot_data(data_plot['worst'], logarithmic=True, oneplot=True, data_label="Worst Case")
