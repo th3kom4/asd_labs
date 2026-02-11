@@ -16,40 +16,44 @@ def generate_data(n, gen_type="random"):
         return a
 
 def bubble_sort(seq):
-		op_count = 0
-		n = len(seq)
-
-		for i in range(n):
-				for j in range(0, n - 1 - i):
-						op_count += 1
-						if (seq[j] > seq[j + 1]):
-								temp = seq[j]
-								seq[j] = seq[j + 1]
-								seq[j + 1] = temp
-
-		return op_count
+	op_count = 0
+	swap_count = 0
+	n = len(seq)
+	for i in range(n - 1):
+		for j in range(0, n - 1 - i):
+			op_count += 1
+			if (seq[j] > seq[j + 1]):
+				temp = seq[j]
+				seq[j] = seq[j + 1]
+				seq[j + 1] = temp
+				swap_count += 1
+	return (op_count, swap_count)
 
 def bubble_impr_sort(seq):
-		op_count = 0
-		n = len(seq)
-
-		for i in range(n):
-				swapped = False
-				for j in range(0, n - 1 - i):
-						op_count += 1
-						if (seq[j] > seq[j + 1]):
-								temp = seq[j]
-								seq[j] = seq[j + 1]
-								seq[j + 1] = temp
-
-								swapped = True
-
-				if not swapped:
-					break
-
-		return op_count
+	op_count = 0
+	swap_count = 0
+	n = len(seq)
+	for i in range(n - 1):
+		swapped = False
+		for j in range(0, n - 1 - i):
+			op_count += 1
+			if (seq[j] > seq[j + 1]):
+				temp = seq[j]
+				seq[j] = seq[j + 1]
+				seq[j + 1] = temp
+				swapped = True
+				swap_count += 1
+		if not swapped:
+			break
+	return (op_count, swap_count)
 
 tokuda_gaps = [
+    68178,
+    30301,
+    13467,
+    5985,
+    2660,
+    1182,
     525,
     233,
     103,
@@ -63,6 +67,7 @@ tokuda_gaps = [
 def shellsort(seq, tokuda_gaps):
 	n = len(seq)
 	op_count = 0
+	swap_count = 0
 	for gap in tokuda_gaps:
 		for i in range(gap, n):
 			j = i
@@ -72,10 +77,11 @@ def shellsort(seq, tokuda_gaps):
 				if seq[j - gap] > temp:
 					seq[j] = seq[j - gap]
 					j -= gap
+					swap_count += 1
 				else:
 					break
 			seq[j] = temp
-	return op_count
+	return (op_count, swap_count)
 
 sizes = [10, 100, 1000]
 types = ["random", "best", "worst"]
@@ -95,18 +101,21 @@ for n in sizes:
         data = generate_data(n, gen_type)
         
         data_bubble = np.copy(data)
-        bubble_op_count = bubble_sort(data_bubble)
+        (bubble_op_count, bubble_swap_count) = bubble_sort(data_bubble)
         print("\tBubble sort operation count:", int(bubble_op_count))
+        print("\tBubble sort swap count:", int(bubble_swap_count))
         data_plot[gen_type]['bubble'][n] = bubble_op_count
-        
+
         data_bubble_impr = np.copy(data)
-        bubble_impr_op_count = bubble_impr_sort(data_bubble_impr)
+        (bubble_impr_op_count, bubble_impr_swap_count) = bubble_impr_sort(data_bubble_impr)
         print("\tImproved bubble sort operation count:", int(bubble_impr_op_count))
+        print("\tImproved bubble sort swap count:", int(bubble_impr_swap_count))
         data_plot[gen_type]['bubble_impr'][n] = bubble_impr_op_count
 		
         data_shellsort = np.copy(data)
-        shellsort_op_count = shellsort(data_shellsort, tokuda_gaps)
+        (shellsort_op_count, shellsort_swap_count) = shellsort(data_shellsort, tokuda_gaps)
         print("\tShellsort sort operation count:", int(shellsort_op_count))
+        print("\tShellsort sort swap count:", int(shellsort_swap_count))
         data_plot[gen_type]['shellsort'][n] = shellsort_op_count
         
 plot_data(data_plot['random'], logarithmic=True, oneplot=True, data_label="Random Data")
